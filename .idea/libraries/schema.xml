@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="schema">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/quanlytour/.idea/dataSources/5852b4a7-bd64-4ede-8d12-d41e5d07bb06/storage_v2/_src_/schema/information_schema.FNRwLQ.zip!/" />
+      <root url="jar://$PROJECT_DIR$/quanlytour/.idea/dataSources/5852b4a7-bd64-4ede-8d12-d41e5d07bb06/storage_v2/_src_/schema/sakila.oXLGyQ.zip!/" />
+      <root url="jar://$PROJECT_DIR$/quanlytour/.idea/dataSources/5852b4a7-bd64-4ede-8d12-d41e5d07bb06/storage_v2/_src_/schema/sys.zb4BAA.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
