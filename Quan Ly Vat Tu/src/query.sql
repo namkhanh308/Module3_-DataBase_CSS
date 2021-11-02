@@ -97,55 +97,61 @@ from vattu v
 #Procedure
 #cau 2:
 delimiter //
-create procedure totalPriceExport(IN vtCode varchar(255))
+create procedure totalPriceExport(IN vtCode varchar(255), OUT tongTien bigint)
 begin
-    select sum(c.donGiaXuat * c.soLuongXuat) as 'Tong tien'
-    from vattu v
-             join chitietphieuxuat c on v.vtId = c.vtId
-    where v.vtCode like v.vtCode;
+    select sum(c.donGiaXuat * c.soLuongXuat)
+    into tongTien
+    from vattu v join chitietphieuxuat c on v.vtId = c.vtId
+    where v.vtCode = vtCode;
 end //
 delimiter ;
 
-call totalPriceExport('BepDien');
+call totalPriceExport('BepDien', @tongTien);
+select @tongTien;
 
 #cau1
 delimiter //
-create procedure total_Remaining_Products(IN vtCode varchar(255))
+create procedure total_Remaining_Products(IN vtCode varchar(255), OUT tongSpConLai bigint)
 begin
-    select v.vtCode, (t.tkSoLuongDau + t.tkSoLuongNhap - t.tkSoLuongXuat) as 'Số sản phẩm còn lại'
+    select  (t.tkSoLuongDau + t.tkSoLuongNhap - t.tkSoLuongXuat) as 'Số sản phẩm còn lại'
+    into tongSpConLai
     from tonkho t
              join vattu v on v.vtId = t.vtId
     where v.vtCode = vtCode;
 end //
 delimiter ;
-call total_Remaining_Products('LapTop');
+call total_Remaining_Products('LapTop', @tongSpConLai);
+select @tongSpConLai;
 
 #cau 3
 delimiter //
-create procedure total_order_quantity (IN ddhCode varchar(255))
+create procedure total_order_quantity(IN ddhCode varchar(255), OUT tongSpDat int)
 begin
     select sum(c.soLuongDat) as 'Tổng số lượng đặt'
-    from dondathang d join chitietdonhang c on d.ddhId = c.ddhId
+    into tongSpDat
+    from dondathang d
+             join chitietdonhang c on d.ddhId = c.ddhId
     where d.ddhCode = ddhCode;
 end//
 delimiter ;
 
-call total_order_quantity('DH2');
+call total_order_quantity('DH1',@tongSpDat);
+select @tongSpDat;
 
 #cau 4
 delimiter //
-create procedure insertProductOrder(IN nccID int , IN ddhCode varchar(255),IN ddhNgayDatHang date)
+create procedure insertProductOrder(IN nccID int, IN ddhCode varchar(255), IN ddhNgayDatHang date)
 begin
-    insert into quanlyvattu.dondathang(nccId, ddhCode, ddhNgayDatHang) values (nccID,ddhCode,ddhNgayDatHang);
+    insert into quanlyvattu.dondathang(nccId, ddhCode, ddhNgayDatHang) values (nccID, ddhCode, ddhNgayDatHang);
 end //
 delimiter ;
-call insertProductOrder(3,'DDH4', '2020-2-1');
+call insertProductOrder(3, 'DDH4', '2020-2-1');
 
 #cau 5
 delimiter //
-create procedure insertProductDetails(IN ddhID int, IN vtID int , IN soLuongDat int)
+create procedure insertProductDetails(IN ddhID int, IN vtID int, IN soLuongDat int)
 begin
-    insert into quanlyvattu.chitietdonhang(ddhId, vtId, soLuongDat) values (ddhID,vtID,soLuongDat);
+    insert into quanlyvattu.chitietdonhang(ddhId, vtId, soLuongDat) values (ddhID, vtID, soLuongDat);
 end //
 delimiter ;
-call insertProductDetails(4,1,5000);
+call insertProductDetails(4, 1, 5000);
