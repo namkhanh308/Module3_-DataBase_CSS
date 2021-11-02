@@ -1,6 +1,6 @@
 use quanlyvattu;
+#View
 #view1 Tạo view có tên vw_CTPNHAP bao gồm các thông tin sau: số phiếu nhập hàng, mã vật tư, số lượng nhập, đơn giá nhập, thành tiền nhập
-use quanlyvattu;
 
 create view vw_CTPNHAP as
 select p.pnCode, p.pnId, v.vtId, c.soLuongNhap, c.donGiaNhap, (c.soLuongNhap * c.donGiaNhap) as 'Thanh tien'
@@ -9,7 +9,6 @@ from phieunhap p
          join vattu v on v.vtId = c.vtId;
 
 #view2 Tạo view có tên vw_CTPNHAP_VT bao gồm các thông tin sau: số phiếu nhập hàng, mã vật tư, tên vật tư, số lượng nhập, đơn giá nhập, thành tiền nhập.
-
 create view vw_CTPNHAP_VT as
 select p.pnCode,
        v.vtId,
@@ -22,7 +21,6 @@ from phieunhap p
          join vattu v on v.vtId = c.vtId;
 
 #view3 Tạo view có tên vw_CTPNHAP_VT_PN bao gồm các thông tin sau: số phiếu nhập hàng, ngày nhập hàng, số đơn đặt hàng, mã vật tư, tên vật tư, số lượng nhập, đơn giá nhập, thành tiền nhập.
-
 create view vw_CTPNHAP_VT_PN as
 select p.pnCode,
        p.pnNgayNhap,
@@ -37,7 +35,6 @@ from chitietphieunhap c
          join vattu v on c.vtId = v.vtId
          join phieunhap p on p.pnId = c.pnId
          join chitietdonhang c2 on v.vtId = c2.vtId and p.ddhId = c2.ddhId;
-
 
 #view4: Tạo view có tên vw_CTPNHAP_VT_PN_DH bao gồm các thông tin sau: số phiếu nhập hàng, ngày nhập hàng, số đơn đặt hàng, mã nhà cung cấp, mã vật tư, tên vật tư, số lượng nhập, đơn giá nhập, thành tiền nhập.
 create view vw_CTPNHAP_VT_PN_DH as
@@ -101,7 +98,8 @@ create procedure totalPriceExport(IN vtCode varchar(255), OUT tongTien bigint)
 begin
     select sum(c.donGiaXuat * c.soLuongXuat)
     into tongTien
-    from vattu v join chitietphieuxuat c on v.vtId = c.vtId
+    from vattu v
+             join chitietphieuxuat c on v.vtId = c.vtId
     where v.vtCode = vtCode;
 end //
 delimiter ;
@@ -113,7 +111,7 @@ select @tongTien;
 delimiter //
 create procedure total_Remaining_Products(IN vtCode varchar(255), OUT tongSpConLai bigint)
 begin
-    select  (t.tkSoLuongDau + t.tkSoLuongNhap - t.tkSoLuongXuat) as 'Số sản phẩm còn lại'
+    select (t.tkSoLuongDau + t.tkSoLuongNhap - t.tkSoLuongXuat) as 'Số sản phẩm còn lại'
     into tongSpConLai
     from tonkho t
              join vattu v on v.vtId = t.vtId
@@ -135,7 +133,7 @@ begin
 end//
 delimiter ;
 
-call total_order_quantity('DH1',@tongSpDat);
+call total_order_quantity('DH1', @tongSpDat);
 select @tongSpDat;
 
 #cau 4
